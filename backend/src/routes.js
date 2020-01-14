@@ -20,17 +20,15 @@ routes.post('/devs', async (request, response) => {
 
   const { name = login, avatar_url, bio } = apiResponse.data;
 
-  const techsArrey = techs.split(',').map(tech => tech.trim());
+  const techsArray = techs.split(',').map(tech => tech.trim());
 
   const dev = await Dev.create({
     gitihub_username,
     name,
     avatar_url,
     bio,
-    techs: techsArrey,
+    techs: techsArray
   })
-
-  console.log(name, avatar_url, bio, gitihub_username);  
 
   return response.json(dev);
 });
