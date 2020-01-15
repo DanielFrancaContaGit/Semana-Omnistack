@@ -1,6 +1,7 @@
 const { Router } = require('express');
-const axios = require('axios');
-const Dev = require('./models/Dev')
+const DevController = require('./controllers/DevController');
+
+const SearchController = require('./controllers/SearchController');
 
 const routes = Router();
 
@@ -12,27 +13,9 @@ const routes = Router();
 //Route params: { DELETE, PUT } request.params (Identificar um recurso na alteração ou remoção )
 //Body:  { POST, PUT } request.body (São dados para a alteração ou criação de um registro)
 
-routes.post('/devs', async (request, response) => {
+routes.get('/devs', DevController.index);
+routes.post('/devs', DevController.store);
 
-  const { gitihub_username, techs } = request.body;
+routes.get('/search',SearchController.index);
 
-  const apiResponse = await axios.get(`https://api.github.com/users/${gitihub_username}`)
-
-  const { name = login, avatar_url, bio } = apiResponse.data;
-
-  const techsArrey = techs.split(',').map(tech => tech.trim());
-
-  const dev = await Dev.create({
-    gitihub_username,
-    name,
-    avatar_url,
-    bio,
-    techs: techsArrey,
-  })
-
-  console.log(name, avatar_url, bio, gitihub_username);  
-
-  return response.json(dev);
-});
-
-module.exports = routes;
+module.exports = routes; 
